@@ -1,0 +1,37 @@
+version: '2'
+services:
+    adq-nginx:
+        image: nginx:latest
+        container_name: adq-nginx
+        ports:
+            - "80:80"
+        volumes:
+            - /var/www/smb/adviqo-coding-challenge/app/public:/code
+            - ./custom.conf:/etc/nginx/conf.d/site.conf
+        links:
+            - adq-php
+    adq-php:
+        build:
+            context: ./
+            dockerfile: Dockerfile-fpm
+        ports: 
+            - "9000:9000"
+        container_name: adq-php
+        environment:
+            - DATABASE_URL=mysql://root:rewolf@adq-db:3306/adq
+            - APP_ENV=dev
+        volumes:
+            - /var/www/smb/adviqo-coding-challenge/app:/code
+        links:
+            - adq-db
+    adq-db:
+        hostname: docker.host
+        image: mysql
+        container_name: adq-db
+        ports: 
+            - "3306:3306"
+        volumes:
+            - /var/www/smb/adviqo-coding-challenge/data:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=rewolf
+            - MYSQL_DATABASE=adq

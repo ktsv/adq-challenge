@@ -1,0 +1,16 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>API documentation</h1>
+        <p>
+            {{ classDoc }}
+        </p>
+        <table border="1">
+            <tr><th>Path</th><th>Description</th></tr>
+        {% for path, description in methodDocs %}
+            <tr><td>{{ path }}</td> <td>{{ description }}</td></tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>
