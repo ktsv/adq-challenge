@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\AdvisorRepository;
 use App\Service\AdvisorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,7 +84,11 @@ class AdvisorController extends AbstractController
     {
         $data = $request->request->all();
         $data['image'] = $request->files->get('image');
-        $advisor = $this->advisorService->createAdvisor($data);
+        try {
+            $advisor = $this->advisorService->createAdvisor($data);
+        } catch (BadRequestException $e) {
+            return new Response($e->getMessage(), 400);
+        }
         return new JsonResponse($advisor);
     }
 
@@ -99,7 +104,11 @@ class AdvisorController extends AbstractController
         $data = $request->request->all();
         $data['image'] = $request->files->get('image');
         $advisor = $this->advisorRepository->find($id);
-        $this->advisorService->updateAdvisor($advisor, $data);
+        try {
+            $this->advisorService->updateAdvisor($advisor, $data);
+        } catch (BadRequestException $e) {
+            return new Response($e->getMessage(), 400);
+        }
 
         return $this->json($advisor);
     }

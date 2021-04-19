@@ -6,13 +6,11 @@ use App\Entity\Advisor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Node\Expr;
 
 /**
  * @method Advisor|null find($id, $lockMode = null, $lockVersion = null)
  * @method Advisor|null findOneBy(array $criteria, array $orderBy = null)
  * @method Advisor[]    findAll()
-// * @method Advisor[]    findBy($criteria, $orderBy = null, $limit = null, $offset = null)
  */
 class AdvisorRepository extends ServiceEntityRepository
 {
@@ -41,7 +39,7 @@ class AdvisorRepository extends ServiceEntityRepository
         if (isset($criteria['language'])) {
 
             $crt = Criteria::create();
-            $crt->where(Criteria::expr()->isNull("JSON_SEARCH(languages_6, 'one', ".$criteria['language'].")"));
+            $crt->where(Criteria::expr()->isNull("JSON_SEARCH(languages_6, 'one', " . $criteria['language'] . ")"));
             $newCriteria['languages'] = $crt;
         }
         return parent::findBy($newCriteria, $orderBy = null, $limit = null, $offset = null);

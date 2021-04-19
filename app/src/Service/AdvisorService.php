@@ -1,11 +1,10 @@
 <?php
 
-
 namespace App\Service;
-
 
 use App\Entity\Advisor;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class AdvisorService
 {
@@ -38,11 +37,14 @@ class AdvisorService
 
     private function setFields(Advisor $advisor, $data = [])
     {
+        if (!(isset($data['name']) && isset($data['pricePerMinute']) && !empty($data['languages']))) {
+            throw new BadRequestException('Mandatory fields weren\'t provided' );
+        }
         $advisor->setName($data['name']);
         $advisor->setPricePerMinute($data['pricePerMinute']);
-        $advisor->setLanguages($data['languages'] ?? null);
+        $advisor->setLanguages($data['languages']);
         $advisor->setDescription($data['description'] ?? null);
-        if ($data['image']){
+        if (isset($data['image'])) {
             $advisor->setImage($data['image']);
         }
     }

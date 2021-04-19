@@ -1,10 +1,7 @@
 <?php
 
-
 namespace App\Controller;
 
-
-use Laminas\Code\Annotation\Parser\DoctrineAnnotationParser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,7 +15,6 @@ class ApidocController extends AbstractController
         $reflection = new \ReflectionClass(AdvisorController::class);
         $classDoc = $this->parsePhpDoc($reflection->getDocComment());
         $reflection->getDocComment();
-        $parser = new DoctrineAnnotationParser();
         $methods = [];
         /** @var \ReflectionMethod $method */
         foreach ($reflection->getMethods() as $method) {
@@ -30,7 +26,8 @@ class ApidocController extends AbstractController
         }
         return $this->render('/apidoc.twig', [
             'classDoc' => $this->parsePhpDoc($reflection->getDocComment())['description'],
-            'methodDocs' => $methods]);
+            'methodDocs' => $methods]
+        );
     }
 
     private function parsePhpDoc(string $doc): array
